@@ -10,10 +10,14 @@ my_usb_probe：
 1 多device（/dev）支持、动态major
   alloc_chrdev_region(&dev_num, 0, 1, "my_device");    //major = MAJOR(dev_num);
   cdev_init(&my_cdev, &fops);
+  my_cdev.owner = THIS_MODULE;                         //my_device通过THIS_MODULE 和 my_cdev与cdev_init关联
+  cdev_add(&my_cdev, dev_num, 1);
+  
   class_create
   device_create
 2 单device（/dev）、不支持动态major
   major = register_chrdev(0, "my_device", &fops);
+  
   class_create
   device_create
 
@@ -29,4 +33,31 @@ static struct file_operations fops = {
 
 
 
+多device（/dev）支持：
+    struct my_device {
+        struct cdev cdev;
+        char data[100];  // 示例数据
+    };
+    static struct my_device *my_devices[NUM_DEVICES];
+    for
+        cdev_init(&my_devices[i]->cdev, &fops);
+        my_devices[i]->cdev.owner = THIS_MODULE;
+        cdev_add(&my_devices[i]->cdev, MKDEV(major, i), 1);
 
+my_ioctl：
+    struct my_device_data *data = file->private_data;
+    switch (cmd) {
+        case 0:
+            data->mode = 1;
+            printk(KERN_INFO "Switched to mode 1\n");
+            break;
+        case 1:
+            data->mode = 2;
+            printk(KERN_INFO "Switched to mode 2\n");
+            break;
+my_ioctl  op：
+    # 切换到模式1
+    ioctl /dev/my_device 0
+
+    # 切换到模式2
+    ioctl /dev/my_device 1
