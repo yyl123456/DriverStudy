@@ -58,6 +58,5 @@ my_ioctl：
 my_ioctl  op：
     # 切换到模式1
     ioctl /dev/my_device 0
-
     # 切换到模式2
     ioctl /dev/my_device 1
