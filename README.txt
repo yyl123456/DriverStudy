@@ -15,6 +15,7 @@ my_usb_probe：
   
   class_create
   device_create
+
 2 单device（/dev）、不支持动态major
   major = register_chrdev(0, "my_device", &fops);
   
