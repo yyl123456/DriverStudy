@@ -1,3 +1,7 @@
+//内核框架
+https://makelinux.github.io/kernel/map/
+
+
 usb_register(&my_usb_driver);  
 static struct usb_driver my_usb_driver = {
     .name = "my_usb_driver",
